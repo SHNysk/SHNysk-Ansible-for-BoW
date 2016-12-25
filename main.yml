@@ -1,0 +1,22 @@
+---
+- host: localhost
+  #Ansible1.9からはsudoではなくbecomeを使ったほうが良いらしい
+  sudoa: true
+  vars: 
+      locale: ja_JP.UTF-8
+      zoneinfo_path: /usr/share/zoneinfo/Asia/Tokyo
+  tasks:
+    - name: update a local machine
+      apt: update_chache=yes 
+    - name: upgrade a local machine
+      apt: upgrade=full
+    - name: set locale
+      command: /usr/sbin/update-locale LANGUAGE={{locale}} LC_ALL={{locale}} LANG={{locale}}
+    - name: set localtime
+      file: >
+         src: {{zoneinfo_path}}
+         dest: /etc/localtime
+         state: link
+         force: yes
+    #- name: install some package
+    #  apt: upgrade=full
